@@ -99,15 +99,19 @@ class Deck():
 		"""
 		Affiche les cartes du deck de la dernière à la première
 		"""
-		for card in self.cards:
-			print(card.__str__())
-		print()
-			
-deck = Deck(fill=False)
-print(deck.len())
+		if self.len() > 0:
+			for card in self.cards:
+				print(card.__str__())
+			print()
+		else:
+			print("Deck vide")
 
-card = Card(10,'Ca')
+if __name__== '__main__':		
+	deck = Deck(fill=False)
+	print(deck.len())
 
-deck.add_card_above(card)
+	card = Card(10,'Ca')
 
-deck.print()
+	deck.add_card_above(card)
+
+	deck.print()
