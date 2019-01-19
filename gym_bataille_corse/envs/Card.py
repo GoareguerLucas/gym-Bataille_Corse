@@ -104,14 +104,15 @@ class Deck():
 				print(card.__str__())
 			print()
 		else:
-			print("Deck vide")
+			print("Deck vide\n")
 
 if __name__== '__main__':		
-	deck = Deck(fill=False)
-	print(deck.len())
+	deck1 = Deck(fill=False)
+	deck2 = Deck(fill=True)
+	print(deck1.len())
+	print(deck2.len())
 
-	card = Card(10,'Ca')
+	deck2.add_deck_below(deck1)
 
-	deck.add_card_above(card)
-
-	deck.print()
+	deck1.print()
+	deck2.print()
