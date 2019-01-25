@@ -47,8 +47,9 @@ etapes = list()
 agent_winner = list()
 somme = 0
 somme_etapes = 0
+affichage = 100
 
-for i_episode in range(1000):
+for i_episode in range(10000):
 	observation = env.reset()
 	t = 0
 	while True: # Non déterministe
@@ -75,9 +76,9 @@ for i_episode in range(1000):
 	if winner(info) == 0: # Si l'agent a gagner
 		somme+=1
 	
-	if i_episode%50 == 0:
-		etapes.append(somme_etapes/50)
-		agent_winner.append(somme/50)
+	if i_episode%affichage == 0:
+		etapes.append(somme_etapes/affichage)
+		agent_winner.append(somme/affichage)
 		somme = 0
 		somme_etapes = 0
 		
