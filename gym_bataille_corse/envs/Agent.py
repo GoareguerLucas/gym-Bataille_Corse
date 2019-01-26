@@ -64,10 +64,10 @@ class AgentSimple(QLearn):
 	
 	def observation_reduce(self,observation):
 		# Initialisation
-		state = [observation['round'],14,14,14,14] # 14 == Aucune carte jouée
+		state = [observation['round'],14,14,14,14,14] # 14 == Aucune carte jouée
 		
 		# Réccupération des 4 derniéres cartes
-		firsts_cards = observation['played_cards'].cards[-4:]
+		firsts_cards = observation['played_cards'].cards[-5:]
 		
 		# Completion de state
 		if firsts_cards != None:

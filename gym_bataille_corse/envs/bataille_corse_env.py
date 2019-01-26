@@ -1,6 +1,7 @@
 import gym
 from gym import Env
 from .Card import *
+import numpy as np
 
 class BatailleCorseEnv(Env):
 	# Set this in SOME subclasses
@@ -18,6 +19,7 @@ class BatailleCorseEnv(Env):
 		
 		self.deck = Deck() # Jeu complet
 		self.decks = None  # Jeux distribués aux joueurs
+		self.know_cards = np.zeros(playersNumber) # Nombre de cartes ayant été vues par tous dans les decks de chaque joueur
 		
 		self.played_cards = Deck(fill=False) # Cartes dans le pli courant
 		self.lost_cards = Deck(fill=False)   # Cartes perdus pour pénalité
@@ -36,10 +38,23 @@ class BatailleCorseEnv(Env):
 		print("Cartes perdues : ")
 		observation['lost_cards'].print()
 		
-	def compute_observation(self): 
+		for i in range(self.playersNumber): # Affichage des cartes connues 
+			name = "cards player"+str(i)
+			print("Cartes connus du joueur",i," :")
+			observation[name].print()
+		
+	def compute_observation(self):
 		observation = {	'round' : self.round,
 						'played_cards': self.played_cards,
 						'lost_cards': self.lost_cards}
+		
+		#know_cards = list()
+		for i,deck in enumerate(self.decks): # Réccupération des cartes connues
+			knows = deck.view_cards(int(self.know_cards[i]))
+			#know_cards.append(cards)
+			name = "cards player"+str(i)
+			observation[name] = knows
+
 		return observation				
 	
 	def compute_info(self):
@@ -168,6 +183,10 @@ class BatailleCorseEnv(Env):
 		Le joueur d'indice player réccupére dans sont deck les cartes 
 		des decks played_cards et lost_cards
 		"""
+		# Mise à jour du nombre de cartes connus
+		nb_card = self.played_cards.len() + self.lost_cards.len()
+		self.know_cards[player] += nb_card
+		
 		# Reccupération des cartes
 		self.decks[player].add_deck_below(self.played_cards)
 		self.decks[player].add_deck_below(self.lost_cards)
@@ -305,6 +324,7 @@ class BatailleCorseEnv(Env):
 		# Distribution des cartes
 		self.deck.shuffle()
 		self.decks = self.deck.distributed(self.playersNumber)
+		self.know_cards = np.zeros(self.playersNumber)
 		
 		# Reset des decks centraux
 		self.played_cards = Deck(fill=False)
@@ -350,25 +370,3 @@ class BatailleCorseEnv(Env):
 			self.print_observation(observation)
 		else:
 			raise NotImplementedError
-
-	def seed(self, seed=None):
-		"""Sets the seed for this env's random number generator(s).
-		Note:
-			Some environments use multiple pseudorandom number generators.
-			We want to capture all such seeds used in order to ensure that
-			there aren't accidental correlations between multiple generators.
-		Returns:
-			list<bigint>: Returns the list of seeds used in this env's random
-				number generators. The first value in the list should be the
-				"main" seed, or the value which a reproducer should pass to
-				'seed'. Often, the main seed equals the provided 'seed', but
-				this won't be true if seed=None, for example.
-		"""
-		logger.warn("Could not seed environment %s", self)
-		return
-
-	def __str__(self):
-		if self.spec is None:
-			return '<{} instance>'.format(type(self).__name__)
-		else:
-			return '<{}<{}>>'.format(type(self).__name__, self.spec.id)

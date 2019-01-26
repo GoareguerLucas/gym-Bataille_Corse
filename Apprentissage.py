@@ -49,7 +49,7 @@ somme = 0
 somme_etapes = 0
 affichage = 100
 
-for i_episode in range(10000):
+for i_episode in range(500):
 	observation = env.reset()
 	t = 0
 	while True: # Non déterministe

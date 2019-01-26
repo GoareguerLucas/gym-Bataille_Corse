@@ -74,6 +74,17 @@ class Deck():
 		
 		return card
 		
+	def view_cards(self,n):
+		"""
+		Renvoie un deck contenant les n dernières cartes du deck
+		"""
+		deck = Deck(fill=False)
+		if self.len() == 0:
+			return deck
+		
+		deck.cards = self.cards[0:n]
+		return deck
+		
 	def shuffle(self):
 		random.shuffle(self.cards)
 	
@@ -109,10 +120,17 @@ class Deck():
 if __name__== '__main__':		
 	deck1 = Deck(fill=False)
 	deck2 = Deck(fill=True)
-	print(deck1.len())
+	"""print(deck1.len())
 	print(deck2.len())
 
 	deck2.add_deck_below(deck1)
 
 	deck1.print()
+	deck2.print()"""
+	
+	deck1 = deck2.view_cards(10)
+	deck1.print()
 	deck2.print()
+	
+	deck3 = deck1.view_cards(15)
+	deck3.print()
